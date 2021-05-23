@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:plumber_app/Login.dart';
 import 'package:plumber_app/helper.dart';
-import 'package:plumber_app/intro_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
           accentColor: Colors.red,
           canvasColor: Colors.white),
-      home: Intropage(),
+      home: Login(),
     );
   }
 }

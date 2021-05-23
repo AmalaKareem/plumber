@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:plumber_app/Home.dart';
+import 'package:plumber_app/quotes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Screensplash extends StatefulWidget {
   @override
@@ -13,41 +16,41 @@ class Screensplash extends StatefulWidget {
 class _ScreensplashState extends State<Screensplash> {
   bool token = false;
   //
-  // getToken() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String name = prefs.getString('name');
-  //   token = prefs.getBool('token') ?? false;
-  //   print(token);
-  //   token
-  //       ? Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => UserScreen(
-  //               name: name,
-  //             ),
-  //           ))
-  //       : Navigator.pushReplacement(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => Home(),
-  //           ));
-  // }
+  getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String name = prefs.getString('name');
+    token = prefs.getBool('token') ?? false;
+    print(token);
+    token
+        ? Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserScreen(
+                name: name,
+              ),
+            ))
+        : Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Home(),
+            ));
+  }
 
-  // void initState() {
-  //   super.initState();
-  //
-  //   // Timer(Duration(seconds: 3), () {
-  //   //   if (FirebaseAuth.instance.currentUser == null) {
-  //   //     Navigator.pushReplacement(
-  //   //         context,
-  //   //         MaterialPageRoute(
-  //   //           builder: (context) => Login(),
-  //   //         ));
-  //   //   } else {
-  //   //     getToken();
-  //   //   }
-  //   // });
-  // }
+  void initState() {
+    super.initState();
+
+    // Timer(Duration(seconds: 3), () {
+    //   if (FirebaseAuth.instance.currentUser == null) {
+    //     Navigator.pushReplacement(
+    //         context,
+    //         MaterialPageRoute(
+    //           builder: (context) => Login(),
+    //         ));
+    //   } else {
+    //     getToken();
+    //   }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {

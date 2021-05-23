@@ -30,8 +30,8 @@ class _OtpscreenState extends State<Otpscreen> {
   );
 
   verifyPhone() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        forceResendingToken: 1,
+    print('_OtpscreenState.verifyPhone');
+    FirebaseAuth.instance.verifyPhoneNumber(
         timeout: const Duration(seconds: 60),
         phoneNumber: "+91${widget.phone}",
         verificationCompleted: (AuthCredential authCredential) async {
@@ -72,11 +72,13 @@ class _OtpscreenState extends State<Otpscreen> {
           setState(() {
             Verificationcode = "Authentication failed";
           });
+          print("failed");
         },
         // (FirebaseAuthException error) {
         //   print(error.message);
-        // },
+        // },appopen chyy
         codeSent: (String verificationID, int resendToken) {
+          print('oncoddesent');
           setState(() {
             Verificationcode = verificationID;
           });
@@ -90,7 +92,8 @@ class _OtpscreenState extends State<Otpscreen> {
 
   void initState() {
     super.initState();
-    verifyPhone();
+    Future.delayed(Duration(seconds: 2)).then((value) => verifyPhone());
+    // verifyPhone();
   }
 
   final GlobalKey<ScaffoldState> Scaffoldkey = GlobalKey<ScaffoldState>();
@@ -171,26 +174,9 @@ class _OtpscreenState extends State<Otpscreen> {
                     const TextStyle(fontSize: 25.0, color: Colors.black87),
                 eachFieldWidth: 40.0,
                 eachFieldHeight: 55.0,
-                onSubmit: (pin) async {
-                  try {
-                    await FirebaseAuth.instance
-                        .signInWithCredential(PhoneAuthProvider.credential(
-                            verificationId: Verificationcode, smsCode: pin))
-                        .then((value) {
-                      if (value.user != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      }
-                    });
-                  } catch (e) {
-                    FocusScope.of(context).unfocus();
-                    Scaffoldkey.currentState.showSnackBar((SnackBar(
-                      content: Text("Invalid OTP "),
-                    )));
-                  }
-                },
+                // onSubmit: (pin) async {
+                //
+                // },
                 focusNode: _pinPutFocusNode,
                 controller: _pinPutController,
                 submittedFieldDecoration: pinPutDecoration,
@@ -203,9 +189,37 @@ class _OtpscreenState extends State<Otpscreen> {
               height: 40,
             ),
             RaisedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home()));
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance
+                      .signInWithCredential(PhoneAuthProvider.credential(
+                          verificationId: Verificationcode,
+                          smsCode: _pinPutController.text))
+                      .then((value) {
+                    if (value.user != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Alert Dialog"),
+                              content: Text('Error'),
+                            );
+                          });
+                    }
+                  });
+                } catch (e) {
+                  FocusScope.of(context).unfocus();
+                  Scaffoldkey.currentState.showSnackBar((SnackBar(
+                    content: Text("Invalid OTP "),
+                  )));
+                }
+                // Navigator.push(
+                //     context, MaterialPageRoute(builder: (context) => Home()));
 
                 // }
                 // (pin) async {
@@ -244,7 +258,9 @@ class _OtpscreenState extends State<Otpscreen> {
                     fontWeight: FontWeight.w600),
               ),
               onTap: () {
-                setState(() {});
+                verifyPhone();
+                // Navigator.push(
+                //     context, MaterialPageRoute(builder: (context) => Home()));
               },
             ),
           ],
